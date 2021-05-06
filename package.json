@@ -1,0 +1,40 @@
+{
+  "name": "CodeWell",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.11.2",
+    "bcrypt": "^5.0.1",
+    "bootstrap": "^4.6.0",
+    "draft-js": "^0.11.7",
+    "formik": "^2.2.6",
+    "jquery": "^3.6.0",
+    "meteor-node-stubs": "^1.0.1",
+    "moment": "^2.29.1",
+    "query-string": "^7.0.0",
+    "react": "^16.14.0",
+    "react-bootstrap4-modal": "^1.7.5",
+    "react-copy-to-clipboard": "^5.0.3",
+    "react-dnd": "8.*",
+    "react-dnd-html5-backend": "8.*",
+    "react-dom": "^16.14.0",
+    "react-ionicons": "^4.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-syntax-highlighter": "^15.4.3",
+    "react-tag-input": "^6.5.2",
+    "react-toast-notifications": "^2.4.4",
+    "simpl-schema": "^1.12.0",
+    "styled-components": "^5.2.3"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.jsx",
+      "server": "server/main.js"
+    }
+  }
+}
