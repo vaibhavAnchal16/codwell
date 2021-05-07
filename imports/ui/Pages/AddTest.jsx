@@ -9,6 +9,7 @@ import { useToasts } from "react-toast-notifications";
 import $ from "jquery";
 
 import { getAllClients } from "../../api/queries/clients/clientQueries";
+import { useUser } from "../../api/shared/userHook";
 
 function AddTest(props) {
   const [tags, setTags] = useState([]);
@@ -20,8 +21,11 @@ function AddTest(props) {
     enter: 13,
   };
   const delimiters = [KeyCodes.comma, KeyCodes.enter];
-
-  useEffect(() => {});
+  const { email } = useUser();
+  const userName = () => {
+    var name = email?.match(/^([^@]*)@/)[1];
+    return name;
+  };
 
   const handleDelete = (i) => {
     setTags(tags.filter((tag, index) => index !== i));
@@ -120,6 +124,7 @@ function AddTest(props) {
           htmlCode,
           createdAt: new Date(),
           createdBy: Meteor.userId(),
+          creatorName: userName(),
         });
         addToast(`Code Added !!`, {
           appearance: "success",

@@ -11,7 +11,6 @@ ServiceConfiguration.configurations.insert({
     "496426612013-5k710bse2319kfobm6qba8trcqe06ill.apps.googleusercontent.com",
   secret: "HrC-I51_NNlQgMo4cF_zGg7N",
 });
-
 Accounts.registerLoginHandler("google", (params) => {
   const data = params.google;
   // If this isn't facebook login then we don't care about it. No need to proceed.
@@ -44,10 +43,6 @@ Accounts.registerLoginHandler("google", (params) => {
         $addToSet: { emails: { address: data.user.email, verified: true } },
       }
     );
-    Profiles.insert({
-      userId: userId,
-      email: data.user.email,
-    });
   } else {
     // Create our user
     userId = Meteor.users.insert({
@@ -61,10 +56,6 @@ Accounts.registerLoginHandler("google", (params) => {
           verified: true,
         },
       ],
-    });
-    Profiles.insert({
-      userId: userId,
-      email: data.user.email,
     });
   }
   return { userId: userId };

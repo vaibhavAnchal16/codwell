@@ -8,10 +8,7 @@ import {
   userFavorites,
 } from "./queries/favorites/favoritesQueries";
 import { testMessages } from "./queries/messages/messagesQueries";
-import {
-  getAllUsersProfileQuery,
-  getUserProfileQuery,
-} from "./queries/profiles/profileQueries";
+import { getUsersEmailQuery } from "./queries/profiles/profileQueries";
 import {
   getMyTests,
   getTestDetail,
@@ -20,9 +17,6 @@ import {
 
 Meteor.startup(() => {
   if (Meteor.isServer) {
-    getUserProfileQuery.expose();
-    getAllUsersProfileQuery.expose();
-
     getAllClients.expose();
     getClientByName.expose();
     getAllClient.expose();
@@ -35,5 +29,6 @@ Meteor.startup(() => {
     userFavorites.expose();
     myAllFavorites.expose();
     testMessages.expose();
+    getUsersEmailQuery.expose();
   }
 });

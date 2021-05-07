@@ -13,9 +13,8 @@ export const getTestsByClient = Tests.createQuery("getTestsByClient", {
   testName: 1,
   createdAt: 1,
   tags: 1,
-  user: {
-    emails: 1,
-  },
+  createdBy: 1,
+  creatorName: 1,
 });
 export const getTestDetail = Tests.createQuery("getTestDetail", {
   $filters: {
@@ -43,13 +42,7 @@ export const getTestDetail = Tests.createQuery("getTestDetail", {
     clientName: 1,
   },
   tags: 1,
-  user: {
-    emails: 1,
-  },
-  // messages: {
-  //   message: 1,
-  //   commentor: 1,
-  // },
+  creatorName: 1,
 });
 export const getMyTests = Tests.createQuery("getMyTests", {
   $filter({ filters, params }) {
@@ -74,7 +67,5 @@ export const getMyTests = Tests.createQuery("getMyTests", {
   client: {
     clientName: 1,
   },
-  user: {
-    emails: 1,
-  },
+  creatorName: 1,
 });

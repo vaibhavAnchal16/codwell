@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { Meteor } from "meteor/meteor";
 import { useTracker } from "meteor/react-meteor-data";
+import { getUsersEmailQuery } from "../queries/profiles/profileQueries";
 
 const UserContext = createContext();
 
@@ -9,7 +10,10 @@ const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   useTracker(() => {
     if (Meteor.userId()) {
-      setEmail(Meteor.user()?.emails[0]?.address);
+      const userQuery = getUsersEmailQuery.clone();
+      const userQuerySubs = userQuery.subscribe();
+      const user = userQuery.fetchOne();
+      setEmail(user?.services?.google?.email);
     }
   }, []);
   return (

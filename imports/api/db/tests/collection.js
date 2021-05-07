@@ -31,6 +31,9 @@ TestsSchema = new SimpleSchema({
       return Meteor.userId();
     },
   },
+  creatorName: {
+    type: String,
+  },
 });
 
 Tests.attachSchema(TestsSchema);

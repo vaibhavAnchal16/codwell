@@ -316,9 +316,7 @@ function Dashboard(props) {
                           <p className="mb-0 ml-2">{at.testName}</p>
                         </div>
                         <span className="d-block text-right">
-                          <small>
-                            Created By :{userName(at?.user?.emails[0]?.address)}
-                          </small>
+                          <small>Created By :{at?.creatorName}</small>
                         </span>
                       </a>
                     ))}

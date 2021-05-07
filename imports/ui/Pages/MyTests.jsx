@@ -28,6 +28,7 @@ function MyTests(props) {
     const queryDetail = getMyTests.clone({
       userId: Meteor.userId(),
     });
+
     const handle = queryDetail.subscribe();
     return {
       loading: !handle.ready(),

@@ -4,14 +4,13 @@ import SimpleSchema from "simpl-schema";
 
 // Collection
 const Profiles = new Mongo.Collection("Profiles");
-
 // Schema
-const ProfilesSchema = new SimpleSchema({
-  userId: String,
-  email: String,
-});
+// const ProfilesSchema = new SimpleSchema({
+//   userId: String,
+//   email: String,
+// });
 
 // ProfilesSchema.extend(TimestampsSchama);
-Profiles.attachSchema(ProfilesSchema);
+// Profiles.attachSchema(ProfilesSchema);
 
 export default Profiles;

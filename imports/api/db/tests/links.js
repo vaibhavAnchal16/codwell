@@ -10,7 +10,6 @@ Tests.addLinks({
     field: "clientId",
   },
 });
-
 Tests.addLinks({
   user: {
     type: "one",

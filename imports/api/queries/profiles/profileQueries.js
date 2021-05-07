@@ -1,22 +1,12 @@
 import Profiles from "../../db/profiles/collection";
 
-export const getUserProfileQuery = Profiles.createQuery("getUserProfileQuery", {
-  $filters: {
-    email: "",
-  },
-  $filter({ filters, params }) {
-    if (params.email) {
-      filters.email = params.email;
-    }
-  },
-  userId: 1,
-});
-
-export const getAllUsersProfileQuery = Profiles.createQuery(
-  "getAllUsersProfileQuery",
+export const getUsersEmailQuery = Meteor.users.createQuery(
+  "getUsersEmailQuery",
   {
-    user: {
-      emails: 1,
+    services: {
+      google: {
+        email: 1,
+      },
     },
   }
 );
