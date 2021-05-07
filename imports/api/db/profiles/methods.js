@@ -8,8 +8,8 @@ ServiceConfiguration.configurations.remove({
 ServiceConfiguration.configurations.insert({
   service: "google",
   clientId:
-    "496426612013-lc60nisd3ie7pul0pb3p8tq7ae3c18mr.apps.googleusercontent.com",
-  secret: "Ogfdg1p6ca3z8mJpUnBShyVc",
+    "496426612013-5k710bse2319kfobm6qba8trcqe06ill.apps.googleusercontent.com",
+  secret: "HrC-I51_NNlQgMo4cF_zGg7N",
 });
 
 Accounts.registerLoginHandler("google", (params) => {
