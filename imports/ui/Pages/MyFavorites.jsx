@@ -160,6 +160,7 @@ function MyFavorites(props) {
                 </div>
               </div>
               <div className="list-group">
+                {console.log(tests)}
                 {tests?.map((t, i) => (
                   <a
                     href=""

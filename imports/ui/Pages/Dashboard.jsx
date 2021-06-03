@@ -10,6 +10,7 @@ import {
   LayersSharp,
   PushSharp,
   SearchCircleOutline,
+  TvOutline,
 } from "react-ionicons";
 import { useTracker } from "meteor/react-meteor-data";
 import { useHistory } from "react-router-dom";
@@ -22,7 +23,10 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useToasts } from "react-toast-notifications";
 import SpzLoader from "../Components/SpzLoader";
 import LeftSticky from "../Components/LeftSticky";
-import { getAllClients } from "../../api/queries/clients/clientQueries";
+import {
+  getAllClients,
+  getAllClientsCount,
+} from "../../api/queries/clients/clientQueries";
 import {
   getTestDetail,
   getTestsByClient,
@@ -36,25 +40,37 @@ function Dashboard(props) {
   const [searchTest, setSearchTest] = useState(false);
   const [action, setAction] = useState(false);
   const [loaderFavorite, setLoaderFavorite] = useState(false);
+  // const [perPage, setPerPage] = useState(10);
+  // const [skip, setSkip] = useState(0);
+  // const [page, setPage] = useState(1);
   const [modalScreen, setModalScreen] = useState("");
   const history = useHistory();
   const { addToast } = useToasts();
   const { email } = useUser();
   const queryParam = qs.parse(props.location.search);
   useEffect(() => {}, []);
-  const { loading, allClients, allTests } = useTracker(() => {
+  const { loading, allClients, allTests, clientsCount } = useTracker(() => {
     const parsed = qs.parse(props.location.search);
     const query = getAllClients.clone({
+      clientName: searchClient.toString().toLowerCase(),
+      // limit: perPage,
+      // skip: (page - 1) * perPage,
+    });
+    const clientCountQuery = getAllClientsCount.clone({
       clientName: searchClient.toString().toLowerCase(),
     });
     const queryTests = getTestsByClient.clone({
       clientId: parsed.clientId,
     });
-    const handle = query.subscribe() && queryTests.subscribe();
+    const handle =
+      query.subscribe() &&
+      queryTests.subscribe() &&
+      clientCountQuery.subscribe();
     return {
       loading: !handle.ready(),
       allClients: query.fetch(),
       allTests: queryTests.fetch(),
+      clientsCount: clientCountQuery.fetch()?.length,
     };
   }, [searchClient, props.location.search]);
 
@@ -277,6 +293,14 @@ function Dashboard(props) {
                     </div>
                   </a>
                 ))}
+                {/* {(clientsCount !== perPage || clientsCount < perPage) && (
+                  <button
+                    className="btn btn-sm btn-primary mt-1"
+                    onClick={(_) => setPerPage(perPage + 10)}
+                  >
+                    Load More
+                  </button>
+                )} */}
               </div>
             </div>
             {/* Clients List Ends */}
@@ -419,7 +443,12 @@ function Dashboard(props) {
                                     setModalScreen("control");
                                   }}
                                 >
-                                  Enlarge{" "}
+                                  <TvOutline
+                                    color={"#dc3545"}
+                                    title="Enlarge"
+                                    height="25px"
+                                    width="25px"
+                                  />
                                 </a>
                               </span>
                             </div>
@@ -447,7 +476,12 @@ function Dashboard(props) {
                                     setModalScreen("mockup");
                                   }}
                                 >
-                                  Enlarge{" "}
+                                  <TvOutline
+                                    color={"#dc3545"}
+                                    title="Enlarge"
+                                    height="25px"
+                                    width="25px"
+                                  />
                                 </a>
                               </span>
                             </div>

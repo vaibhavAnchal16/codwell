@@ -1,6 +1,7 @@
 import {
   getAllClient,
   getAllClients,
+  getAllClientsCount,
   getClientByName,
 } from "./queries/clients/clientQueries";
 import {
@@ -22,7 +23,7 @@ Meteor.startup(() => {
     getAllClient.expose();
 
     getTestsByClient.expose();
-
+    getAllClientsCount.expose();
     getTestDetail.expose();
     getMyTests.expose();
 

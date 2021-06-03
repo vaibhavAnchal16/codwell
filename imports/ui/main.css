@@ -164,7 +164,7 @@ a:hover {
   border-radius: 4px;
   width: 100%;
   background-position: center;
-  background-size: cover;
+  background-size: contain;
 }
 #controlScreenshot,
 #mockupScreenshot {
@@ -178,7 +178,7 @@ a:hover {
   position: relative;
 }
 
-#controlScreenshot::after {
+/* #controlScreenshot::after {
   justify-content: center;
   position: absolute;
   top: 4px;
@@ -209,7 +209,7 @@ a:hover {
   padding: 5px;
   color: #fff;
   content: "Click here and paste mock-up / variation image";
-}
+} */
 #controlScreenshot:focus,
 #mockupScreenshot:focus {
   border: 1px solid #000;

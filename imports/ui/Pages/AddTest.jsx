@@ -10,6 +10,7 @@ import $ from "jquery";
 
 import { getAllClients } from "../../api/queries/clients/clientQueries";
 import { useUser } from "../../api/shared/userHook";
+import { CloseCircleOutline } from "react-ionicons";
 
 function AddTest(props) {
   const [tags, setTags] = useState([]);
@@ -35,7 +36,7 @@ function AddTest(props) {
     setTags((tags) => [...tags, tag]);
   };
   const pasteScreenshot = (elem) => {
-    const targetTag = $(elem.currentTarget).find("img");
+    const targetTag = $(elem.currentTarget).parent().parent().find("img");
     var imageFor = "";
     imageFor = $(elem.currentTarget).hasClass("controlScreenshot")
       ? "controlScreenshot"
@@ -51,13 +52,12 @@ function AddTest(props) {
           reader.onload = function (event) {
             event.preventDefault();
             // console.log(event.target.result); // data url!
-            console.log(imageFor);
             if (imageFor === "controlScreenshot") {
               setControlScreenshot(event.target.result);
-              $(targetTag).attr("src", event.target.result);
+              // $(targetTag).attr("src", event.target.result);
             } else {
               setMockupScreenshot(event.target.result);
-              $(targetTag).attr("src", event.target.result);
+              // $(targetTag).attr("src", event.target.result);
             }
           };
           reader.readAsDataURL(blob);
@@ -267,25 +267,138 @@ function AddTest(props) {
                 </div>
                 <div className="form-group w-100 screenshot-wrapper d-flex align-items-center justify-content-between">
                   <div>
-                    <label>Control Screenshot</label>
-                    <div
-                      className=""
-                      id="controlScreenshot"
-                      className="controlScreenshot"
-                      onClick={(e) => pasteScreenshot(e)}
-                    >
-                      <img className="css" src="" />
+                    <div className="d-flex align-items-center justify-content-between">
+                      <label>Control Screenshot</label>{" "}
+                      {controlScreenshot !== "" && (
+                        <CloseCircleOutline
+                          color={"#00000"}
+                          title="Close"
+                          height="25px"
+                          width="25px"
+                          style={{ cursor: "pointer" }}
+                          onClick={(_) => setControlScreenshot("")}
+                        />
+                      )}
+                    </div>
+
+                    <div className="" id="controlScreenshot">
+                      {controlScreenshot === "" && (
+                        <div className="upload-wrappers">
+                          <button
+                            className="btn btn-sm btn-danger mr-1"
+                            type="button"
+                            onClick={(e) => {
+                              e.currentTarget.nextSibling.click();
+                            }}
+                          >
+                            Upload Image
+                          </button>
+                          <input
+                            style={{ display: "none" }}
+                            type="file"
+                            onChange={(e) => {
+                              console.log(e.currentTarget.files[0]);
+                              console.log(e.currentTarget.files[0].type);
+                              if (
+                                e.currentTarget.files[0].type == "image/jpeg" ||
+                                e.currentTarget.files[0].type == "image/jpg" ||
+                                e.currentTarget.files[0].type == "image/png"
+                              ) {
+                                var reader = new FileReader();
+                                reader.readAsDataURL(e.currentTarget.files[0]);
+                                reader.onload = function () {
+                                  console.log(reader.result); //base64encoded string
+                                  setControlScreenshot(reader.result);
+                                };
+                                reader.onerror = function (error) {
+                                  // console.log("Error: ", error);
+                                  addToast(`${error}`, {
+                                    appearance: "error",
+                                  });
+                                };
+                              } else {
+                                addToast(`Please upload a valid file!`, {
+                                  appearance: "error",
+                                });
+                              }
+                            }}
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-danger ml-1 controlScreenshot"
+                            onClick={(e) => pasteScreenshot(e)}
+                          >
+                            Click Here and Pase Image
+                          </button>
+                        </div>
+                      )}
+
+                      <img className="css" src={controlScreenshot} />
                     </div>
                   </div>
                   <div>
-                    <label>Mock-up Screenshot</label>
-                    <div
-                      className=""
-                      id="mockupScreenshot"
-                      className="mockupScreenshot"
-                      onClick={(e) => pasteScreenshot(e)}
-                    >
-                      <img src="" className="mss" />
+                    <div className="d-flex align-items-center justify-content-between">
+                      <label>Mock-up Screenshot</label>{" "}
+                      {mockupScreenshot !== "" && (
+                        <CloseCircleOutline
+                          color={"#00000"}
+                          title="Close"
+                          height="25px"
+                          width="25px"
+                          style={{ cursor: "pointer" }}
+                          onClick={(_) => setMockupScreenshot("")}
+                        />
+                      )}
+                    </div>
+                    <div className="" id="mockupScreenshot">
+                      {mockupScreenshot === "" && (
+                        <div className="upload-wrappers">
+                          <button
+                            className="btn btn-sm btn-danger mr-1"
+                            type="button"
+                          >
+                            Upload Image
+                          </button>
+                          <input
+                            style={{ display: "none" }}
+                            type="file"
+                            onChange={(e) => {
+                              console.log(e.currentTarget.files[0]);
+                              console.log(e.currentTarget.files[0].type);
+                              if (
+                                e.currentTarget.files[0].type == "image/jpeg" ||
+                                e.currentTarget.files[0].type == "image/jpg" ||
+                                e.currentTarget.files[0].type == "image/png"
+                              ) {
+                                var reader = new FileReader();
+                                reader.readAsDataURL(e.currentTarget.files[0]);
+                                reader.onload = function () {
+                                  setMockupScreenshot(reader.result);
+                                };
+                                reader.onerror = function (error) {
+                                  // console.log("Error: ", error);
+                                  addToast(`${error}`, {
+                                    appearance: "error",
+                                  });
+                                };
+                              } else {
+                                addToast(`Please upload a valid file!`, {
+                                  appearance: "error",
+                                });
+                              }
+                            }}
+                          />
+                          <button
+                            className="btn btn-sm btn-danger ml-1 mockupScreenshot"
+                            type="button"
+                            onClick={(e) => pasteScreenshot(e)}
+                          >
+                            Click Here and Paste Image
+                          </button>
+                        </div>
+                      )}
+
+                      <img src={mockupScreenshot} className="mss" />
                     </div>
                   </div>
                 </div>

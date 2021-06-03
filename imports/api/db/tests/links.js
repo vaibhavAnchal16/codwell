@@ -1,7 +1,6 @@
+import Tests from "./collection";
 import Clients from "../clients/collection";
 import Favorites from "../favorites/collection";
-import Messages from "../messages/collections";
-import Tests from "./collection";
 
 Tests.addLinks({
   client: {
@@ -10,6 +9,7 @@ Tests.addLinks({
     field: "clientId",
   },
 });
+
 Tests.addLinks({
   user: {
     type: "one",

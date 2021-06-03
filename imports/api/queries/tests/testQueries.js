@@ -15,6 +15,9 @@ export const getTestsByClient = Tests.createQuery("getTestsByClient", {
   tags: 1,
   createdBy: 1,
   creatorName: 1,
+  client: {
+    clientName: 1,
+  },
 });
 export const getTestDetail = Tests.createQuery("getTestDetail", {
   $filters: {
