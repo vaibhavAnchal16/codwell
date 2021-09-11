@@ -1,8 +1,8 @@
+import Tests from "../tests/collection";
 import Favorites from "./collection";
-import Tests from "./collection";
 
 Favorites.addLinks({
-  tests: {
+  alltests: {
     type: "one",
     collection: Tests,
     field: "testId",

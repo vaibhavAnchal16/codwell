@@ -18,9 +18,9 @@ Tests.addLinks({
   },
 });
 
-Tests.addLinks({
-  myfavorites: {
-    collection: Favorites,
-    inversedBy: "tests",
-  },
-});
+// Tests.addLinks({
+//   myfavorites: {
+//     collection: Favorites,
+//     inversedBy: "tests",
+//   },
+// });

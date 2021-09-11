@@ -160,7 +160,6 @@ function MyFavorites(props) {
                 </div>
               </div>
               <div className="list-group">
-                {console.log(tests)}
                 {tests?.map((t, i) => (
                   <a
                     href=""
@@ -181,7 +180,7 @@ function MyFavorites(props) {
                   >
                     <div className="d-flex w-100 align-items-center">
                       <CheckmarkCircleOutline color={"#00000"} />
-                      <p className="mb-0 ml-2">{t.testId}</p>
+                      <p className="mb-0 ml-2">{t?.alltests?.testName}</p>
                     </div>
                   </a>
                 ))}

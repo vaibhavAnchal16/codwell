@@ -71,4 +71,14 @@ export const getMyTests = Tests.createQuery("getMyTests", {
     clientName: 1,
   },
   creatorName: 1,
+  alltests: {
+    testName: 1,
+  },
+  favorite: {
+    services: {
+      google: {
+        email: 1,
+      },
+    },
+  },
 });

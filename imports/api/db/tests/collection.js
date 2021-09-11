@@ -1,6 +1,8 @@
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
 import SimpleSchema from "simpl-schema";
+import Clients from "../clients/collection";
+import Favorites from "../favorites/collection";
 
 // Collection
 const Tests = new Mongo.Collection("tests");
@@ -37,5 +39,41 @@ TestsSchema = new SimpleSchema({
 });
 
 Tests.attachSchema(TestsSchema);
+
+Favorites.addLinks({
+  alltests: {
+    type: "one",
+    collection: Tests,
+    field: "testId",
+  },
+});
+Favorites.addLinks({
+  favorite: {
+    type: "one",
+    collection: Meteor.users,
+    field: "favoriteBy",
+  },
+});
+
+Tests.addLinks({
+  favorites: {
+    collection: Favorites,
+    inversedBy: "alltests",
+  },
+});
+Tests.addLinks({
+  client: {
+    type: "one",
+    collection: Clients,
+    field: "clientId",
+  },
+});
+Tests.addLinks({
+  user: {
+    type: "one",
+    collection: Meteor.users,
+    field: "createdBy",
+  },
+});
 
 export default Tests;
