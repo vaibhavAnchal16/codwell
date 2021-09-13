@@ -520,7 +520,18 @@ function Dashboard(props) {
                           )}
                       </div>
                     </div>
-
+                    <div className="p-2">
+                      {testDetails?.tags?.split(",").map((td, i) => (
+                        <span
+                          className="badge badge-primary mr-1 font-weight-normal"
+                          style={{ fontSize: "14px" }}
+                          key={i}
+                        >
+                          {" "}
+                          {td}{" "}
+                        </span>
+                      ))}
+                    </div>
                     {testDetails?.jsCode !== undefined &&
                       testDetails?.jsCode !== "" &&
                       codeBlocks(

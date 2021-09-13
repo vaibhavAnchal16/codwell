@@ -289,7 +289,7 @@ function MyTests(props) {
                           ></div>
                         </div>
                       </div>
-                      {testDetail?.gitUrl != "" &&
+                      {testDetail?.gitUrl &&
                         assetBlocks(
                           testDetail?.gitUrl,
                           "Git Url",
@@ -300,7 +300,7 @@ function MyTests(props) {
                             width="20px"
                           />
                         )}
-                      {testDetail?.assetsUrl != "" &&
+                      {testDetail?.assetsUrl &&
                         assetBlocks(
                           testDetail?.assetsUrl,
                           "Cloudinary Url",

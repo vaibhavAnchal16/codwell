@@ -141,7 +141,6 @@ function AddTest(props) {
   return (
     <div className="login-background">
       <div className="container">
-        {console.log(tags)}
         <div className="row">
           <div className="col-md-12 mx-auto login-outer">
             <div className="addtest-wrapper bg-white shadow w-100 px-3">
@@ -298,8 +297,8 @@ function AddTest(props) {
                             style={{ display: "none" }}
                             type="file"
                             onChange={(e) => {
-                              console.log(e.currentTarget.files[0]);
-                              console.log(e.currentTarget.files[0].type);
+                              // console.log(e.currentTarget.files[0]);
+                              // console.log(e.currentTarget.files[0].type);
                               if (
                                 e.currentTarget.files[0].type == "image/jpeg" ||
                                 e.currentTarget.files[0].type == "image/jpg" ||
@@ -357,6 +356,9 @@ function AddTest(props) {
                           <button
                             className="btn btn-sm btn-danger mr-1"
                             type="button"
+                            onClick={(e) => {
+                              e.currentTarget.nextSibling.click();
+                            }}
                           >
                             Upload Image
                           </button>
@@ -364,8 +366,8 @@ function AddTest(props) {
                             style={{ display: "none" }}
                             type="file"
                             onChange={(e) => {
-                              console.log(e.currentTarget.files[0]);
-                              console.log(e.currentTarget.files[0].type);
+                              // console.log(e.currentTarget.files[0]);
+                              // console.log(e.currentTarget.files[0].type);
                               if (
                                 e.currentTarget.files[0].type == "image/jpeg" ||
                                 e.currentTarget.files[0].type == "image/jpg" ||
