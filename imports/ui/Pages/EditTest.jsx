@@ -23,14 +23,27 @@ function EditTest(props) {
   };
   const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-  useEffect(() => {
+  const { testloading, singleTestDetails } = useTracker(() => {
     const testId = props?.match?.params?.testId;
     const testDetailQuery = getTestDetail.clone({
       testId: testId,
     });
     const handle = testDetailQuery.subscribe();
-    const singleTestDetail = testDetailQuery.fetchOne();
-    setTestDetail(singleTestDetail);
+    if (handle.ready()) {
+      var _ = testDetailQuery.fetchOne();
+      let oldTags = [];
+      _?.tags?.split(",").map((ot) => {
+        oldTags.push({
+          id: ot,
+          text: ot,
+        });
+      });
+      setTags(oldTags);
+    }
+    return {
+      testloading: !handle.ready(),
+      singleTestDetails: testDetailQuery.fetchOne(),
+    };
   }, [props?.match?.params?.testId]);
 
   const handleDelete = (i) => {
@@ -57,7 +70,7 @@ function EditTest(props) {
           reader.onload = function (event) {
             event.preventDefault();
             // console.log(event.target.result); // data url!
-            console.log(imageFor);
+            // console.log(imageFor);
             if (imageFor === "controlScreenshot") {
               setControlScreenshot(event.target.result);
               $(targetTag).attr("src", event.target.result);
@@ -81,55 +94,33 @@ function EditTest(props) {
     };
   }, []);
 
-  const formik = useFormik({
-    onSubmit: async (values) => {
-      const {
-        clientId,
-        testName,
-        testType,
-        pageType,
-        gitUrl,
-        assetsUrl,
-        testCases,
-        cssCode,
-        jsCode,
-        htmlCode,
-      } = values;
-      try {
-        if (controlScreenshot === "" || mockupScreenshot === "") {
-          addToast(`Please add screnshots !!`, {
-            appearance: "error",
-          });
-          return;
-        }
-        await Meteor.callWithPromise("addTest", {
-          clientId,
-          testName,
-          testType,
-          pageType,
-          controlScreenshot,
-          mockupScreenshot,
-          gitUrl,
-          assetsUrl,
-          testCases,
-          tags: tags.map((tg) => tg.text).join(","),
-          cssCode,
-          jsCode,
-          htmlCode,
-          createdAt: new Date(),
-          createdBy: Meteor.userId(),
-        });
-        addToast(`Code Added !!`, {
-          appearance: "success",
-        });
-        props.history.push(RouteConstants.Dashboard);
-        formik.resetForm({ value: "" });
-      } catch (error) {
-        console.log(error);
-      }
-      //   alert(JSON.stringify(values, null, 2));
-    },
-  });
+  const updateTest = async (e) => {
+    e.preventDefault();
+    if (props?.match?.params?.testId === singleTestDetails?._id) {
+      await Meteor.callWithPromise("updateTest", {
+        _id: props?.match?.params?.testId,
+        clientId: e.target.clientId.value,
+        testName: e.target.testName.value,
+        testType: e.target.testType.value,
+        pageType: e.target.pageType.value,
+        gitUrl: e.target.gitUrl.value,
+        assetsUrl: e.target.assetsUrl.value,
+        testCases: e.target.testCases.value,
+        tags: tags.map((tg) => tg.text).join(","),
+        cssCode: e.target.cssCode.value,
+        jsCode: e.target.jsCode.value,
+        htmlCode: e.target.htmlCode.value,
+      });
+      addToast(`Code Updated !!`, {
+        appearance: "success",
+      });
+      props.history.push(RouteConstants.Dashboard);
+    } else {
+      addToast(`You are not authorized to do that stuff !!`, {
+        appearance: "error",
+      });
+    }
+  };
 
   return (
     <div className="login-background">
@@ -200,7 +191,7 @@ function EditTest(props) {
 
               <form
                 className="w-100 formfields-wrapper"
-                onSubmit={formik.handleSubmit}
+                onSubmit={(e) => updateTest(e)}
               >
                 <div className="form-group">
                   <label>Client Name</label>
@@ -208,13 +199,17 @@ function EditTest(props) {
                     className="form-control"
                     required
                     name="clientId"
-                    defaultValue={testDetail?.clientId}
-
-                    // {...formik.getFieldProps("clientId")}
+                    defaultValue={singleTestDetails?.clientId}
                   >
                     <option value=""> Select </option>
                     {allClients?.map((ac) => (
-                      <option value={ac._id} key={ac._id}>
+                      <option
+                        value={ac._id}
+                        key={ac._id}
+                        selected={
+                          ac?._id == singleTestDetails?.clientId ? true : false
+                        }
+                      >
                         {ac.clientName}
                       </option>
                     ))}
@@ -225,7 +220,7 @@ function EditTest(props) {
                   <input
                     type="text"
                     required
-                    defaultValue={testDetail?.testName}
+                    defaultValue={singleTestDetails?.testName}
                     name="testName"
                     // {...formik.getFieldProps("testName")}
                     className="form-control"
@@ -238,12 +233,20 @@ function EditTest(props) {
                     required
                     className="form-control"
                     name="testType"
-                    defaultValue={testDetail?.testType}
+                    defaultValue={singleTestDetails?.testType}
                     // {...formik.getFieldProps("testType")}
                   >
                     <option value=""> Select </option>
                     {testTypes.map((tt, i) => (
-                      <option key={i}> {tt} </option>
+                      <option
+                        key={i}
+                        selected={
+                          tt == singleTestDetails?.testType ? true : false
+                        }
+                      >
+                        {" "}
+                        {tt}{" "}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -254,12 +257,20 @@ function EditTest(props) {
                     required
                     className="form-control"
                     name="pageType"
-                    defaultValue={testDetail?.pageType}
+                    defaultValue={singleTestDetails?.pageType}
                     // {...formik.getFieldProps("pageType")}
                   >
                     <option value=""> Select </option>
                     {pageTypes.map((pt, i) => (
-                      <option key={i}> {pt} </option>
+                      <option
+                        key={i}
+                        selected={
+                          pt == singleTestDetails?.pageType ? true : false
+                        }
+                      >
+                        {" "}
+                        {pt}{" "}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -274,7 +285,7 @@ function EditTest(props) {
                     >
                       <img
                         className="css"
-                        src={testDetail?.controlScreenshot}
+                        src={singleTestDetails?.controlScreenshot}
                       />
                     </div>
                   </div>
@@ -286,7 +297,10 @@ function EditTest(props) {
                       className="mockupScreenshot"
                       onClick={(e) => pasteScreenshot(e)}
                     >
-                      <img src={testDetail?.mockupScreenshot} className="mss" />
+                      <img
+                        src={singleTestDetails?.mockupScreenshot}
+                        className="mss"
+                      />
                     </div>
                   </div>
                 </div>
@@ -308,7 +322,7 @@ function EditTest(props) {
                   <input
                     type="url"
                     // {...formik.getFieldProps("gitUrl")}
-                    defaultValue={testDetail?.gitUrl}
+                    defaultValue={singleTestDetails?.gitUrl}
                     name="gitUrl"
                     className="form-control"
                     placeholder="https://...."
@@ -322,7 +336,7 @@ function EditTest(props) {
                   <input
                     type="url"
                     // {...formik.getFieldProps("assetsUrl")}
-                    defaultValue={testDetail?.assetsUrl}
+                    defaultValue={singleTestDetails?.assetsUrl}
                     name="assetsUrl"
                     className="form-control"
                     placeholder="https://...."
@@ -333,7 +347,7 @@ function EditTest(props) {
                   <textarea
                     className="form-control"
                     // {...formik.getFieldProps("testCases")}
-                    defaultValue={testDetail?.testCases}
+                    defaultValue={singleTestDetails?.testCases}
                     name="testCases"
                     placeholder="Test Cases"
                   ></textarea>
@@ -346,7 +360,7 @@ function EditTest(props) {
                       <textarea
                         className="form-control border-0 shadow"
                         // {...formik.getFieldProps("cssCode")}
-                        defaultValue={testDetail?.cssCode}
+                        defaultValue={singleTestDetails?.cssCode}
                         name="cssCode"
                         rows="10"
                         placeholder="body{background-color:#fff;box-sizing:border-box; }"
@@ -362,7 +376,7 @@ function EditTest(props) {
                       <textarea
                         className="form-control border-0 shadow"
                         // {...formik.getFieldProps("jsCode")}
-                        defaultValue={testDetail?.jsCode}
+                        defaultValue={singleTestDetails?.jsCode}
                         name="jsCode"
                         rows="10"
                         placeholder="$(document).ready(function(){......})"
@@ -378,7 +392,7 @@ function EditTest(props) {
                       <textarea
                         className="form-control border-0 shadow"
                         // {...formik.getFieldProps("htmlCode")}
-                        defaultValue={testDetail?.htmlCode}
+                        defaultValue={singleTestDetails?.htmlCode}
                         name="htmlCode"
                         rows="10"
                         placeholder="<form><small>Format: 123-45-678</small><br><br></form>s"

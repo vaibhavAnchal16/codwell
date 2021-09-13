@@ -47,6 +47,7 @@ Favorites.addLinks({
     field: "testId",
   },
 });
+
 Favorites.addLinks({
   favorite: {
     type: "one",

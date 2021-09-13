@@ -141,6 +141,7 @@ function AddTest(props) {
   return (
     <div className="login-background">
       <div className="container">
+        {console.log(tags)}
         <div className="row">
           <div className="col-md-12 mx-auto login-outer">
             <div className="addtest-wrapper bg-white shadow w-100 px-3">
