@@ -129,7 +129,10 @@ function MyTests(props) {
         <div className="dashboard-left-sticky">
           <LeftSticky />
         </div>
-        <Modal visible={modalScreen !== "" ? true : false}>
+        <Modal
+          visible={modalScreen !== "" ? true : false}
+          dialogClassName="modal-lg"
+        >
           <div className="modal-header">
             <h5 className="modal-title" style={{ textTransform: "capitalize" }}>
               {modalScreen} Screnshot
@@ -195,6 +198,12 @@ function MyTests(props) {
                       <CheckmarkCircleOutline color={"#00000"} />
                       <p className="mb-0 ml-2">{t.testName}</p>
                     </div>
+                    <p className="d-block text-right mb-0">
+                      <small>
+                        Client Name :{" "}
+                        <strong className=""> {t?.client?.clientName} </strong>
+                      </small>
+                    </p>
                   </a>
                 ))}
               </div>
@@ -241,22 +250,16 @@ function MyTests(props) {
                       <div className="test-detailing-inner">
                         <div className="input-group">
                           <div className="d-flex justify-content-between w-100">
-                            <label className="w-100">Control Screen Shot</label>
-                            <span>
-                              <a
-                                href=""
-                                onClick={(_) => {
-                                  _.preventDefault();
-                                  setModalScreen("control");
-                                }}
-                              >
-                                Enlarge
-                              </a>
-                            </span>
+                            <label className="w-100 text-center font-weight-bold pb-2">
+                              Control Screen Shot
+                            </label>
                           </div>
 
                           <div
                             className="screenshotwrapper"
+                            onClick={(_) => {
+                              setModalScreen("control");
+                            }}
                             style={{
                               backgroundImage:
                                 "url(" + testDetail?.controlScreenshot + ")",
@@ -267,21 +270,15 @@ function MyTests(props) {
                       <div className="test-detailing-inner">
                         <div className="input-group">
                           <div className="d-flex justify-content-between w-100">
-                            <label className="w-100">Mock Up Screen Shot</label>
-                            <span>
-                              <a
-                                href=""
-                                onClick={(_) => {
-                                  _.preventDefault();
-                                  setModalScreen("mockup");
-                                }}
-                              >
-                                Enlarge{" "}
-                              </a>
-                            </span>
+                            <label className="w-100 text-center font-weight-bold pb-2">
+                              Mock Up Screen Shot
+                            </label>
                           </div>
                           <div
                             className="screenshotwrapper"
+                            onClick={(_) => {
+                              setModalScreen("mockup");
+                            }}
                             style={{
                               backgroundImage:
                                 "url(" + testDetail?.mockupScreenshot + ")",

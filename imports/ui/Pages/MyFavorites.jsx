@@ -18,11 +18,13 @@ import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlig
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useToasts } from "react-toast-notifications";
 import { getTestDetail } from "../../api/queries/tests/testQueries";
+import { useHistory } from "react-router";
 
 function MyFavorites(props) {
   const [modalScreen, setModalScreen] = useState("");
   const queryParam = qs.parse(props.location.search);
   const { addToast } = useToasts();
+  const history = useHistory();
   var { tests, loading } = useTracker(() => {
     const queryDetail = myAllFavorites.clone({
       favoriteBy: Meteor.userId(),
@@ -116,7 +118,10 @@ function MyFavorites(props) {
         <div className="dashboard-left-sticky">
           <LeftSticky />
         </div>
-        <Modal visible={modalScreen !== "" ? true : false}>
+        <Modal
+          visible={modalScreen !== "" ? true : false}
+          dialogClassName="modal-lg"
+        >
           <div className="modal-header">
             <h5 className="modal-title" style={{ textTransform: "capitalize" }}>
               {modalScreen} Screnshot
@@ -198,39 +203,54 @@ function MyFavorites(props) {
                         <ChevronForwardOutline color={"#00000"} />
                         <small> {testDetail.testName} </small>
                       </h4>
-                      <CopyToClipboard
-                        text={window.location.href}
-                        onCopy={() =>
-                          addToast("Link Copied Successfully", {
-                            appearance: "success",
-                          })
-                        }
-                      >
-                        <button className="d-flex ml-auto my-2 btn btn-outline-primary btn-sm">
-                          Copy Repository Link
+                      <div className="d-flex align-items-center">
+                        <button
+                          className="btn btn-sm btn-danger mr-2"
+                          title="Remove from favorites"
+                          onClick={async (_) => {
+                            const unfav = await Meteor.callWithPromise(
+                              "removeFavorite",
+                              queryParam?.testId
+                            );
+                            if (unfav) {
+                              addToast("Removed from Favorites", {
+                                appearance: "success",
+                              });
+                              history.push("/myfavorites");
+                            }
+                          }}
+                        >
+                          {" "}
+                          unfavourite
                         </button>
-                      </CopyToClipboard>
+                        <CopyToClipboard
+                          text={window.location.href}
+                          onCopy={() =>
+                            addToast("Link Copied Successfully", {
+                              appearance: "success",
+                            })
+                          }
+                        >
+                          <button className="d-flex ml-auto my-2 btn btn-outline-primary btn-sm">
+                            Copy Repository Link
+                          </button>
+                        </CopyToClipboard>
+                      </div>
                     </div>
                     <div className="test-detailing px-2 py-4">
                       <div className="test-detailing-inner">
                         <div className="input-group">
                           <div className="d-flex justify-content-between w-100">
-                            <label className="w-100">Control Screen Shot</label>
-                            <span>
-                              <a
-                                href=""
-                                onClick={(_) => {
-                                  _.preventDefault();
-                                  setModalScreen("control");
-                                }}
-                              >
-                                Enlarge
-                              </a>
-                            </span>
+                            <label className="w-100 text-center font-weight-bold pb-2">
+                              Control Screen Shot
+                            </label>
                           </div>
 
                           <div
                             className="screenshotwrapper"
+                            onClick={(_) => {
+                              setModalScreen("control");
+                            }}
                             style={{
                               backgroundImage:
                                 "url(" + testDetail?.controlScreenshot + ")",
@@ -241,21 +261,15 @@ function MyFavorites(props) {
                       <div className="test-detailing-inner">
                         <div className="input-group">
                           <div className="d-flex justify-content-between w-100">
-                            <label className="w-100">Mock Up Screen Shot</label>
-                            <span>
-                              <a
-                                href=""
-                                onClick={(_) => {
-                                  _.preventDefault();
-                                  setModalScreen("mockup");
-                                }}
-                              >
-                                Enlarge{" "}
-                              </a>
-                            </span>
+                            <label className="w-100 text-center font-weight-bold pb-2">
+                              Mock Up Screen Shot
+                            </label>
                           </div>
                           <div
                             className="screenshotwrapper"
+                            onClick={(_) => {
+                              setModalScreen("mockup");
+                            }}
                             style={{
                               backgroundImage:
                                 "url(" + testDetail?.mockupScreenshot + ")",
@@ -264,7 +278,8 @@ function MyFavorites(props) {
                         </div>
                       </div>
 
-                      {testDetail?.gitUrl != "" &&
+                      {testDetail?.gitUrl &&
+                        testDetail?.gitUrl !== "" &&
                         assetBlocks(
                           testDetail?.gitUrl,
                           "Git Url",
@@ -275,7 +290,8 @@ function MyFavorites(props) {
                             width="20px"
                           />
                         )}
-                      {testDetail?.assetsUrl != "" &&
+                      {testDetail?.assetsUrl &&
+                        testDetail?.assetsUrl !== "" &&
                         assetBlocks(
                           testDetail?.assetsUrl,
                           "Cloudinary Url",

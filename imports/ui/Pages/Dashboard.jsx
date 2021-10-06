@@ -203,7 +203,10 @@ function Dashboard(props) {
           <LeftSticky />
         </div>
         <div className="dashboard-inner">
-          <Modal visible={modalScreen !== "" ? true : false}>
+          <Modal
+            visible={modalScreen !== "" ? true : false}
+            dialogClassName="modal-lg"
+          >
             <div className="modal-header">
               <h5
                 className="modal-title"
@@ -380,6 +383,23 @@ function Dashboard(props) {
                                   title="Favourited"
                                   height="25px"
                                   width="25px"
+                                  style={{ cursor: "pointer" }}
+                                  onClick={async (_) => {
+                                    setLoaderFavorite(true);
+                                    try {
+                                      await Meteor.call(
+                                        `removeFavorite`,
+                                        testDetails?._id
+                                      );
+                                      addToast(`Removed from your favorites!`, {
+                                        appearance: "success",
+                                      });
+                                      setLoaderFavorite(false);
+                                    } catch (error) {
+                                      console.log(error);
+                                      setLoaderFavorite(false);
+                                    }
+                                  }}
                                 />
                               ) : (
                                 <HeartOutline
@@ -432,29 +452,14 @@ function Dashboard(props) {
                         <div className="test-detailing-inner">
                           <div className="input-group">
                             <div className="d-flex justify-content-between w-100">
-                              <label className="w-100">
+                              <label className="w-100 text-center font-weight-bold pb-2">
                                 Control Screen Shot
                               </label>
-                              <span>
-                                <a
-                                  href=""
-                                  onClick={(_) => {
-                                    _.preventDefault();
-                                    setModalScreen("control");
-                                  }}
-                                >
-                                  <TvOutline
-                                    color={"#dc3545"}
-                                    title="Enlarge"
-                                    height="25px"
-                                    width="25px"
-                                  />
-                                </a>
-                              </span>
                             </div>
 
                             <div
                               className="screenshotwrapper"
+                              onClick={(_) => setModalScreen("control")}
                               style={{
                                 backgroundImage:
                                   "url(" + testDetails?.controlScreenshot + ")",
@@ -465,28 +470,13 @@ function Dashboard(props) {
                         <div className="test-detailing-inner">
                           <div className="input-group">
                             <div className="d-flex justify-content-between w-100">
-                              <label className="w-100">
+                              <label className="w-100 text-center font-weight-bold pb-2">
                                 Mock Up Screen Shot
                               </label>
-                              <span>
-                                <a
-                                  href=""
-                                  onClick={(_) => {
-                                    _.preventDefault();
-                                    setModalScreen("mockup");
-                                  }}
-                                >
-                                  <TvOutline
-                                    color={"#dc3545"}
-                                    title="Enlarge"
-                                    height="25px"
-                                    width="25px"
-                                  />
-                                </a>
-                              </span>
                             </div>
                             <div
                               className="screenshotwrapper"
+                              onClick={(_) => setModalScreen("mockup")}
                               style={{
                                 backgroundImage:
                                   "url(" + testDetails?.mockupScreenshot + ")",
@@ -520,18 +510,42 @@ function Dashboard(props) {
                           )}
                       </div>
                     </div>
-                    <div className="p-2">
-                      {testDetails?.tags?.split(",").map((td, i) => (
-                        <span
-                          className="badge badge-primary mr-1 font-weight-normal"
-                          style={{ fontSize: "14px" }}
-                          key={i}
-                        >
-                          {" "}
-                          {td}{" "}
-                        </span>
-                      ))}
+                    <div className="p-2 d-flex justify-content-between align-items-center bg-light">
+                      <div>
+                        {testDetails?.tags?.split(",").map((td, i) => (
+                          <span
+                            className="badge badge-primary mr-1 font-weight-normal"
+                            style={{ fontSize: "14px" }}
+                            key={i}
+                          >
+                            {" "}
+                            {td}{" "}
+                          </span>
+                        ))}
+                      </div>
+                      {testDetails?.testCases && (
+                        <div>
+                          <a
+                            data-toggle="collapse"
+                            href="#collapseExample"
+                            role="button"
+                            className="text-primary font-weight-bold"
+                            aria-expanded="false"
+                            aria-controls="collapseExample"
+                          >
+                            SHOW TEST CASES
+                          </a>
+                        </div>
+                      )}
                     </div>
+                    <div className="pl-2 pr-2">
+                      <div className="collapse mt-2" id="collapseExample">
+                        <div className="card card-body">
+                          {testDetails?.testCases}
+                        </div>
+                      </div>
+                    </div>
+
                     {testDetails?.jsCode !== undefined &&
                       testDetails?.jsCode !== "" &&
                       codeBlocks(

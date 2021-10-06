@@ -5,4 +5,7 @@ Meteor.methods({
     check(obj, Object);
     return Favorites.insert(obj);
   },
+  removeFavorite(id) {
+    return Favorites.remove({ testId: id });
+  },
 });

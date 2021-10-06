@@ -20,6 +20,9 @@ export const myAllFavorites = Favorites.createQuery("myAllFavorites", {
   },
   testId: 1,
   clientId: 1,
+  client: {
+    clientName: 1,
+  },
   alltests: {
     testName: 1,
   },
